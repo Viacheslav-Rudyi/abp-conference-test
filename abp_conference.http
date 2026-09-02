@@ -1,0 +1,6 @@
+@abp_conference_HostAddress = http://localhost:5118
+
+GET {{abp_conference_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
