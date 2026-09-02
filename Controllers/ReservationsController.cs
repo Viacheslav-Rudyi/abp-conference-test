@@ -64,6 +64,7 @@ namespace abp_conference.Controllers
         {
             services = services ?? new string[0];
             if (time.Hour + duration > 23) return BadRequest("Cannot book after hour 23");
+            if (time.Hour < 6) return BadRequest("Cannot book before 06:00");
 
             var available = (await GetAvailableHalls(date, time, time.AddHours(duration), 0)).Value;
 
