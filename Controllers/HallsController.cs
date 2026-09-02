@@ -46,6 +46,19 @@ namespace abp_conference.Controllers
 
         // PUT: api/Halls/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// Update info about hall <br/>
+        /// Service information is applied in following order:
+        /// remove -> update (add new service or update price of an existing one) -> override (fully override services info)
+        /// </summary>
+        /// <param name="id">Hall identifier</param>
+        /// <param name="name">Updated hall name</param>
+        /// <param name="capacity">Updated hall capacity</param>
+        /// <param name="price">Updated base fee per hour</param>
+        /// <param name="removeService">single service to remove</param>
+        /// <param name="updateService">single service to update || add</param>
+        /// <param name="overrideAllServices">multiple service string</param>
+        /// <returns></returns>
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> PutHall(int id, string? name, int? capacity, int? price, string? removeService, string? updateService, string? overrideAllServices)
         {

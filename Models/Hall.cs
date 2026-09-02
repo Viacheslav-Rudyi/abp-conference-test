@@ -2,6 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 namespace abp_conference.Models
 {
+    /// <summary>
+    /// class that represents Hall information.<br/>
+    /// 
+    /// has following properties: <br/>
+    /// Id: unique identifier <br/>
+    /// Name: a string <br/>
+    /// Capacity: integer <br/>
+    /// Services: a string of available additional services <br/>
+    /// Formatted: "service1: price1, service2: price2" <br/>
+    /// 
+    /// </summary>
     public class Hall
     {
         private static int Count {get; set; } = 0;
@@ -23,6 +34,11 @@ namespace abp_conference.Models
             this.BasePrice = basePrice;
         }
 
+        /// <summary>
+        /// A function that validates if a SINGLE service is formatted correctly
+        /// </summary>
+        /// <param name="service">String of following format: "service: price"</param>
+        /// <returns>if service string is formatted correctly</returns>
         public static bool ValidateServiceFormat(string service)
         {
             int f;
@@ -36,6 +52,11 @@ namespace abp_conference.Models
             return result;
         }
 
+        /// <summary>
+        /// Validate if string of ALL services is formatted correclty
+        /// </summary>
+        /// <param name="allServices"></param>
+        /// <returns>if string is formatted correctly</returns>
         public static bool ValidateAllServices(string allServices)
         {
             try
@@ -52,7 +73,11 @@ namespace abp_conference.Models
                 return false;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service"></param>
+        /// <returns>a NAME part of a correctly formatted service</returns>
         public static string GetServiceName(string service)
         {
             return service.Split(":")[0].ToLower().Trim();
@@ -65,6 +90,10 @@ namespace abp_conference.Models
             return f;
         }
 
+        /// <summary>
+        /// Generates a name-price Dictionary from additional services information of this specific hall
+        /// </summary>
+        /// <returns></returns>
         public Dictionary<string, int> GetServiceHashMap()
         {
             var result = new Dictionary<string, int>();
@@ -81,6 +110,11 @@ namespace abp_conference.Models
 
             return result;
         }
+        /// <summary>
+        /// Generates a correctly formatted string with information about additional services<br/>
+        /// </summary>
+        /// <param name="map">a name-price Dictionary of services</param>
+        /// <returns></returns>
         public static string GenerateServiceText(Dictionary<string, int> map)
         {
             string resultString = "";
@@ -92,7 +126,11 @@ namespace abp_conference.Models
 
             return resultString;
         }
-
+        
+        /// <summary>
+        /// Generates a name-price Dictionary from additional services information from a service string
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<string, int> GetServiceHashMap(string service)
         {
             var result = new Dictionary<string, int>();

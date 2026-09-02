@@ -23,25 +23,42 @@ namespace abp_conference.Controllers
             _context = context;
             _hallsController = hallsController;
         }
-
+        /// <summary>
+        /// Get ALL Halls available for reserrvation based on input condition
+        /// </summary>
+        /// <param name="date">Date in format MM.DD.YYYY</param>
+        /// <param name="from">Beginning hour in format HH:MM</param>
+        /// <param name="to">Final hour in format HH:MM</param>
+        /// <param name="minCapacity">Minimal capacity of a hall (int)</param>
+        /// <returns>Hall[]</returns>
         [HttpGet("AvailableHalls")]
         public async Task<ActionResult<IEnumerable<Hall>>> GetAvailableHalls(DateOnly date, TimeOnly from, TimeOnly to, int minCapacity)
         {
             var reservationList = (await GetReservations()).Value;
             var reservationBegins = date.ToDateTime(from);
             var reservationEnds = date.ToDateTime(to);
+            // select occupied halls to exclude from final array
             var occupied = reservationList.Where(res =>
-                res.BeginTime.CompareTo(reservationEnds) < 1 &&
-                reservationBegins.CompareTo(res.EndTime) < 1
+                res.BeginTime.CompareTo(reservationEnds) < 0 &&
+                reservationBegins.CompareTo(res.EndTime) < 0
             ).Select(x => x.HallId);
 
-            Console.WriteLine(occupied);
+            // Console.WriteLine(occupied);
 
             var availiableHalls = (await _hallsController.GetHalls()).Value.Where(hall => occupied.Contains(hall.Id) == false && hall.Capacity >= minCapacity);
             
             return availiableHalls.ToArray();
         }
 
+        /// <summary>
+        /// Reserve a hall for specific date and time with optional services
+        /// </summary>
+        /// <param name="hallId"></param>
+        /// <param name="date">Reservation Date in format MM.DD.YYYY</param>
+        /// <param name="time">Beginning tie of reservation</param>
+        /// <param name="duration">Reservation duration in hours</param>
+        /// <param name="services">String with additional services</param>
+        /// <returns></returns>
         [HttpPost("MakeReservation")]
         public async Task<ActionResult<Reservation>> MakeReservation(int hallId, DateOnly date, TimeOnly time, int duration, string[] services = null)
         {

@@ -1,6 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 namespace abp_conference.Models
 {
+    /// <summary>
+    /// Represents information about reservations <br/>
+    /// <value>Id</value>: unique Identifier <br/>
+    /// <value>HallId</value>: identifier of a conference Hall <br/>
+    /// <value>BeginTime; EndTime</value>: a time frame of reservation <br/>
+    /// <value>Active</value>: mark if reservation is active or cancelled <br/>
+    /// <value>Services</value>: optional string of services and additional fees <br/>
+    /// <value>TotalPrice; BaseFee; ServiceFee</value>: price for specific reservation <br/>
+    /// </summary>
     public class Reservation
     {
         private static int Count = 0;
@@ -30,6 +39,10 @@ namespace abp_conference.Models
             this.ServiceFee = this.CalculateServiceFee();
         }
 
+        /// <summary>
+        /// Calculate Fee for hall reservation based on hourly price
+        /// </summary>
+        /// <returns></returns>
         public float CalculateBaseFee()
         {
             int beginTime = this.BeginTime.Hour;
@@ -50,6 +63,10 @@ namespace abp_conference.Models
             return total;
         }
 
+        /// <summary>
+        /// Calculate price for additional Services
+        /// </summary>
+        /// <returns></returns>
         public float CalculateServiceFee()
         {
             try
@@ -76,6 +93,10 @@ namespace abp_conference.Models
             }
         }
 
+        /// <summary>
+        /// Calculate Fee for hall reservation AND additional services
+        /// </summary>
+        /// <returns></returns>
         public float CalculateTotalFee()
         {
             return this.CalculateBaseFee() + this.CalculateServiceFee();
